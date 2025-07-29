@@ -7,7 +7,7 @@ import { VictoryPie, VictoryTooltip } from 'victory';
 import Modal from './components/Modal';
 import ExpenseList from './components/ExpenseList';
 // import functions to interact with controller.
-import { expenseByCategory } from './utils';
+import { expenseByCategory, fetchExpenses } from './utils';
 import './App.css';
 
 function App() {
@@ -15,9 +15,10 @@ function App() {
   const [modal, setModal] = useState(false);
   const [id, setId] = useState(false);
   const [selectDate, setSelectDate] = useState(new Date());
+  // update view from model w/ controller
   useEffect(() => {
-    // update view from model w/ controller
-  }, []);
+    fetchExpenses().then((res) => setExpenses(res));
+    }, []);
 
   return (
     <Container className="App">
@@ -40,7 +41,10 @@ function App() {
               onChange={(newValue) => {
                 setSelectDate(newValue);
                 // update view from model w/ controller
-                
+                fetchExpenses(newValue.getTime()).then((res) => setExpenses(res));
+                //This function presumably fetches expense data for that specific date from the backend. 
+                // Once the data is returned (as a promise), it updates the state with setExpenses(res), 
+                // causing the UI to re-render with the new expense data.
               }}
               slotProps={{ textField: { variant: 'outlined' } }}
             />
@@ -84,8 +88,8 @@ function App() {
           expenses={expenses}
           refreshExpenses={async () => {
             // update view from model w/ controller
-            const res = [];
-            setExpenses(res)
+            const res = fetchExpenses(selectDate.getTime());
+            setExpenses(res);
           }}
           _id={id}
           handleClose={() => {

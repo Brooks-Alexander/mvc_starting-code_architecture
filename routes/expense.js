@@ -1,6 +1,6 @@
 // require express and it's router component
 const express = require('express');
-const { create, expenseByDate, expenseById, read, update } = require('../controllers')
+const { create, expenseByDate, expenseById, read, remove, update } = require('../controllers')
 const router = express.Router();
 
 // require the middlewares and callback functions from the controller directory
@@ -11,10 +11,10 @@ router.post('/expense/create', create);
 // Create GET route to read an expense
 router.get('/expense/:id', expenseById, read);
 // Create PUT route to update an expense
-router.put('/expense/update/:id', expenseById, update)
+router.put('/expense/:id', expenseById, update)
 // Create DELETE route to remove an expense
-router.delete('/expense/remove/:id', remove);
+router.delete('/expense/:id', remove);
 // Create GET route to read a list of expenses
-router.get('/expense/:date', expenseByDate, read);
+router.get('/expense/list/:expenseDate', expenseByDate, read);
 
 module.exports = router;
